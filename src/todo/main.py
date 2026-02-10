@@ -42,12 +42,22 @@ todo_list = [
         "name": "Wash the dishes",
     },
 ]
+def find_todo(todo_id) -> list[TodoRead]:
+    """Метод для нахождения todo по индексу"""
+    global todo_list
+    for item in todo_list:
+        if item["id"] == todo_id:
+            return TodoRead.model_validate(item)
+        return None
 
 
 @app.get("/todo")
 async def get_todo_list() -> list[TodoRead]:
     return [TodoRead.model_validate(item) for item in todo_list]
 
+@app.get("/todo/{todo_id}")
+async def get_todo_for_id(todo_id: int) -> list[TodoRead]:
+    return [find_todo(todo_id)]
 
 @app.post("/todo", status_code=status.HTTP_201_CREATED)
 async def add_todo(data: TodoAdd) -> list[TodoRead]:
@@ -69,6 +79,16 @@ async def remove_todo(todo_id: int):
         if item["id"] != todo_id 
         and item["user_id"] == 1
     ]
+
+@app.patch("/todo")
+async def patching_todo(data: TodoRead) -> None:
+    ...
+
+
+@app.put("/todo")
+async def update_todo(data: TodoRead) -> None:
+    ...
+
 
 
 if __name__ == "__main__":
