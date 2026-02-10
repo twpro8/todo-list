@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status
+from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
 import uvicorn
 
@@ -47,6 +47,15 @@ todo_list = [
 @app.get("/todo")
 async def get_todo_list() -> list[TodoRead]:
     return [TodoRead.model_validate(item) for item in todo_list]
+
+
+@app.get("/todo/{todo_id}")
+async def get_todo(todo_id: int) -> TodoRead:
+    user_id = 1
+    todo = [item for item in todo_list if item["user_id"] == user_id and item["id"] == todo_id] 
+    if not todo:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")
+    return TodoRead.model_validate(todo[0])
 
 
 @app.post("/todo", status_code=status.HTTP_201_CREATED)
