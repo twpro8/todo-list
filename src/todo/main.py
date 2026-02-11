@@ -15,7 +15,7 @@ class User:
 
 class Todo:
     id: int
-    user_id: int # fk
+    user_id: int  # fk
     name: str
 
 
@@ -52,31 +52,33 @@ async def get_todo_list() -> list[TodoRead]:
 @app.get("/todo/{todo_id}")
 async def get_todo(todo_id: int) -> TodoRead:
     user_id = 1
-    todo = [item for item in todo_list if item["user_id"] == user_id and item["id"] == todo_id] 
+    todo = [
+        item
+        for item in todo_list
+        if item["user_id"] == user_id and item["id"] == todo_id
+    ]
     if not todo:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Todo not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Todo not found",
+        )
     return TodoRead.model_validate(todo[0])
 
 
 @app.post("/todo", status_code=status.HTTP_201_CREATED)
 async def add_todo(data: TodoAdd) -> list[TodoRead]:
-    todo_list.append({
-        "id": 3,
-        **data.model_dump()
-    })
+    todo_list.append({"id": 3, **data.model_dump()})
     return [TodoRead.model_validate(item) for item in todo_list]
 
 
 @app.delete(
-    "/todo/{todo_id}", 
+    "/todo/{todo_id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
 async def remove_todo(todo_id: int):
     global todo_list
     todo_list = [
-        item for item in todo_list 
-        if item["id"] != todo_id 
-        and item["user_id"] == 1
+        item for item in todo_list if item["id"] != todo_id and item["user_id"] == 1
     ]
 
 
