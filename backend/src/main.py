@@ -1,24 +1,8 @@
-from fastapi import FastAPI, status, HTTPException, Body
+from fastapi import FastAPI, status, HTTPException
 from pydantic import BaseModel
-import uvicorn
-
-from src.database import Base
 
 
 app = FastAPI()
-
-
-# Database tables
-class User:
-    id: int
-    username: str
-    password_hash: str
-
-
-class Todo:
-    id: int
-    user_id: int  # fk
-    name: str
 
 
 # dto
@@ -46,7 +30,7 @@ todo_list = [
 ]
 
 
-def get_todo_or_none(todo_id: int, user_id: int) -> TodoRead | None:
+def get_todo_or_none(todo_id: int, user_id: int) -> dict | None:
     user_id = 1
     todo = next(
         (
@@ -56,7 +40,7 @@ def get_todo_or_none(todo_id: int, user_id: int) -> TodoRead | None:
         ),
         None,
     )
-    return TodoRead.model_validate(todo)
+    return todo
 
 
 @app.get("/todo")
@@ -71,14 +55,21 @@ async def get_todo_by_id(todo_id: int) -> TodoRead:
     if not todo:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Todo not found",
+            detail="The todo with this id does not exist in the system.",
         )
     return TodoRead.model_validate(todo)
 
 
 @app.post("/todo", status_code=status.HTTP_201_CREATED)
 async def add_todo(data: TodoAdd) -> list[TodoRead]:
-    todo_list.append({"id": 3, **data.model_dump()})
+    user_id = 1
+    todo_list.append(
+        {
+            "id": todo_list[-1]["id"] + 1,
+            "user_id": user_id,
+            "name": data.name,
+        }
+    )
     return [TodoRead.model_validate(item) for item in todo_list]
 
 
@@ -94,13 +85,16 @@ async def remove_todo(todo_id: int):
 
 
 @app.put("/todo/{todo_id}")
-async def update_todo(todo_id: int, name: str = Body(embed=True)):
+async def update_todo(
+    todo_id: int,
+    data: TodoAdd,
+):
     user_id = 1
     todo = get_todo_or_none(todo_id, user_id)
-    todo["name"] = name
-
+    if not todo:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="The todo with this id does not exist in the system.",
+        )
+    todo["name"] = data.name
     return {"status": "OK"}
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", reload=True)
