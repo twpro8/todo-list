@@ -2,6 +2,8 @@ from fastapi import FastAPI, status, HTTPException, Body
 from pydantic import BaseModel
 import uvicorn
 
+from src.database import Base
+
 
 app = FastAPI()
 
@@ -54,7 +56,7 @@ def get_todo_or_none(todo_id: int, user_id: int) -> TodoRead | None:
         ),
         None,
     )
-    return TodoRead(**todo)
+    return TodoRead.model_validate(todo)
 
 
 @app.get("/todo")
