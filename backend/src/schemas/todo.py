@@ -1,11 +1,13 @@
 from pydantic import BaseModel
 
 
-class TodoAdd(BaseModel):
+class TodoAddRequest(BaseModel):
     name: str
 
 
-class TodoRead(BaseModel):
-    id: int
+class TodoAdd(TodoAddRequest):
     user_id: int
-    name: str
+
+
+class TodoRead(TodoAdd):
+    id: int
