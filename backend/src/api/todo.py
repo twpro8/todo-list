@@ -10,7 +10,7 @@ from src.schemas.todo import TodoAdd, TodoRead, TodoAddRequest
 from src.models.todo import TodoOrm
 
 
-router = APIRouter(prefix="/todo", tags=["Todo"])
+router = APIRouter(prefix="/todos", tags=["Todos"])
 
 
 @router.get("")
