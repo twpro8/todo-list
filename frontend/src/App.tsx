@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Input, DatePicker } from 'antd';
 import axios from 'axios';
-
+import { SidebarProvider, SidebarTrigger } from './components/ui/sidebar';
+import { AppSidebar } from '@/components/Sidebar/AppSidebar';
 
 interface Todo {
   id: number
@@ -46,46 +47,52 @@ function App() {
   }
 
   return (
-    <div className="flex justify-center">
-      <div className="min-w-120 p-4">
-        <h1 className="flex justify-center m-5 text-2xl font-bold">To Do List</h1>
-        <div className="flex gap-2 mb-4">
-          <Input placeholder="Enter todo name"
-            onChange={saveInputText}
-            onKeyDown={handleAddTodoKeyDown}
-            className='w-full flex-1'
-          />
-          <DatePicker className='w-30' />
-          <Button 
-            color="purple"
-            variant="solid"
-            size="large"
-            className='min-w-18'
-            onClick={() => {
-              addTodo();
-            }}
-          >Add</Button>
+    <SidebarProvider>
+      <AppSidebar />
+      <main className='flex-1'>
+        <SidebarTrigger className='cursor-pointer' />
+        <div className="flex justify-center">
+          <div className="min-w-120 p-4">
+            <h1 className="flex justify-center m-5 text-2xl font-bold">To Do List</h1>
+            <div className="flex gap-2 mb-4">
+              <Input placeholder="Enter todo name"
+                onChange={saveInputText}
+                onKeyDown={handleAddTodoKeyDown}
+                className='w-full flex-1'
+              />
+              <DatePicker className='w-30' />
+              <Button
+                color="purple"
+                variant="solid"
+                size="large"
+                className='min-w-18'
+                onClick={() => {
+                  addTodo();
+                }}
+              >Add</Button>
+            </div>
+            <div className="flex flex-col gap-2">
+              {todoList.map((item: Todo) => {
+                return (
+                  <div key={item.id} className="flex justify-between">
+                    <div>{item.name}</div>
+                    <Button
+                      color="danger"
+                      variant="dashed"
+                      onClick={() => {
+                        deleteTodo(item.id);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-2">
-          {todoList.map((item: Todo) => {
-            return (
-              <div key={item.id} className="flex justify-between">
-                <div>{item.name}</div>
-                <Button 
-                  color="danger" 
-                  variant="dashed"
-                  onClick={() => {
-                    deleteTodo(item.id);
-                  }}
-                >
-                  Delete
-                </Button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+      </main>
+    </SidebarProvider>
   )
 }
 
