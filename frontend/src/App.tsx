@@ -15,13 +15,12 @@ function App() {
   const [todoList, setTodoList] = useState([]);
 
   const loadTodoList = async () => {
-    const response = await axios.get('http://localhost:8000/todo');
+    const response = await axios.get('/api/v1/todos');
     setTodoList(response.data);
   }
 
   useEffect(() => {
     loadTodoList();
-    console.log(todoList);
   }, []);
 
   const saveInputText = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,14 +28,18 @@ function App() {
   }
 
   const addTodo = async () => {
-    await axios.post('http://localhost:8000/todo', {
+    await axios.post('/api/v1/todos', {
       name: inputText,
     })
+    
+    // clear input text after adding
+    setInputText('');
+
     loadTodoList();
   }
 
   const deleteTodo = async (todoId: number) => {
-    await axios.delete(`http://localhost:8000/todo/${todoId}`);
+    await axios.delete(`/api/v1/todos/${todoId}`);
     loadTodoList();
   }
 
@@ -58,14 +61,15 @@ function App() {
               <Input placeholder="Enter todo name"
                 onChange={saveInputText}
                 onKeyDown={handleAddTodoKeyDown}
+                value={inputText}
                 className='w-full flex-1'
               />
               <DatePicker className='w-30' />
               <Button
-                color="purple"
+                color="default"
                 variant="solid"
                 size="large"
-                className='min-w-18'
+                className='min-w-18.5'
                 onClick={() => {
                   addTodo();
                 }}
