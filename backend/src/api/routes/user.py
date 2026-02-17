@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from sqlalchemy import select, insert
 
-from src.api.dependencies import SessionDep, UserIdDep
+from src.api.deps import SessionDep, UserIdDep
 from src.models.user import UserOrm
 from src.schemas.user import UserRead, UserAddRequest, UserAdd
 
