@@ -4,5 +4,5 @@ export const getInitials = (name: string): string => {
     .slice(0, 2)
     .map((word) => word[0])
     .join("")
-    .toUpperCase()
-}
+    .toUpperCase();
+};

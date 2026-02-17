@@ -1,13 +1,25 @@
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 import { getInitials } from "@/utils";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface UserInfoProps {
-  fullName?: string
-  email?: string
+  fullName?: string;
+  email?: string;
 }
 
 function UserInfo({ fullName, email }: UserInfoProps) {
@@ -27,24 +39,25 @@ function UserInfo({ fullName, email }: UserInfoProps) {
 }
 
 export function User() {
-  const { isMobile, setOpenMobile } = useSidebar()
+  const { isMobile, setOpenMobile } = useSidebar();
+  const navigate = useNavigate();
 
   // TODO: get current authenticated user
   const user = {
     full_name: "John Davis",
-    email: "noreply@gmail.com"
-  }
+    email: "noreply@gmail.com",
+  };
 
   const handleMenuClick = () => {
     if (isMobile) {
       setOpenMobile(false);
     }
-  }
+  };
 
   const handleLogout = async () => {
     // TODO: logout
-    // logout();
-  }
+    navigate("/login");
+  };
 
   return (
     <SidebarMenu>

@@ -5,17 +5,17 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 export type Item = {
-  icon: LucideIcon
-  title: string
-  path: string
-}
+  icon: LucideIcon;
+  title: string;
+  path: string;
+};
 
 interface MainProps {
-  items: Item[]
+  items: Item[];
 }
 
 export function Main({ items }: MainProps) {
