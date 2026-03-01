@@ -36,12 +36,12 @@ async def login(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
+            detail="User not found",
         )
     if not verify_password(form_data.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect password"
+            detail="Incorrect password",
         )
     # Create access token
     return {"status": "Okey Dokey"}
@@ -54,7 +54,7 @@ async def create_user(
 ):
     hashed_password = hash_password(user_data.password)
     _user_data = UserAdd(
-        username=user_data.username, 
+        username=user_data.username,
         password_hash=hashed_password,
     )
     statement = insert(UserOrm).values(_user_data.model_dump())
@@ -63,7 +63,7 @@ async def create_user(
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="User with the provided username already exists"
+            detail="User with the provided username already exists",
         )
     await session.commit()
     return {"status": "OK"}
